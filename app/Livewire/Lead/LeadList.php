@@ -24,12 +24,7 @@ class LeadList extends Component
 
     public function openCreateModal()
     {
-        $this->name = '';
-        $this->email = '';
-        $this->phone = '';
-        $this->status = '';
-        $this->assigned_to = '';
-        $this->notes = '';
+        $this->reset(['name', 'email', 'phone', 'status', 'assigned_to', 'notes']);
     }
 
     public function createLead()
@@ -46,7 +41,7 @@ class LeadList extends Component
         ]);
 
         $this->reset(['name', 'email', 'phone', 'status', 'assigned_to', 'notes']);
-
+        $this->resetValidation();
         $this->dispatch('close-modal');
         flash()->success('Lead created successfully!');
     }

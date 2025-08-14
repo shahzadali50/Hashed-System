@@ -142,3 +142,10 @@
         </div>
       </div>
 </div>
+<script>
+    window.addEventListener('close-modal', () => {
+        const modal = bootstrap.Modal.getInstance(document.getElementById('createLeadModal'));
+        modal.hide();
+    });
+</script>
+
