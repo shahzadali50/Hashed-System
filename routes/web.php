@@ -55,6 +55,7 @@ Route::group(['as' => 'admin.', 'middleware' => ['auth','admin'], 'prefix' => 'a
     Route::post('portfolio-update/{id}', [PortfolioController::class, 'update'])->name('portfolio-update');
     Route::get('chat/list', [ChatMessageController::class, 'chatList'])->name('chat.list');
     Route::get('leads/list', [LeadController::class, 'list'])->name('leads.list');
+    Route::get('leads/create', [LeadController::class, 'create'])->name('leads.create');
 
 });
 

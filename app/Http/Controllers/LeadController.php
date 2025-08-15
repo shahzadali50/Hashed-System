@@ -11,4 +11,8 @@ class LeadController extends Controller
     {
         return view('admin.leads.index');
     }
+    public function create()
+    {
+        return view('admin.leads.create');
+    }
 }
