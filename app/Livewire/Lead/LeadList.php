@@ -11,8 +11,9 @@ class LeadList extends Component
 {
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
-    public $users;
-    public $name, $email, $phone, $status, $assigned_to, $notes;
+
+    public $users, $name, $email, $phone, $status, $assigned_to, $notes;
+
     protected $rules = [
         'name' => 'required|string|max:255',
         'email' => 'required|email|unique:leads,email',
@@ -22,9 +23,16 @@ class LeadList extends Component
         'notes' => 'required|string',
     ];
 
-    public function openCreateModal()
+        public function mount()
+        {
+            $this->users = User::where('role', 'agent')->pluck('name', 'id');
+        }
+
+    public function resetForm()
     {
         $this->reset(['name', 'email', 'phone', 'status', 'assigned_to', 'notes']);
+        $this->resetValidation();
+        $this->dispatch('reset-form'); // Dispatch event to reset form in JavaScript
     }
 
     public function createLead()
@@ -40,28 +48,21 @@ class LeadList extends Component
             'notes' => $this->notes,
         ]);
 
-        $this->reset(['name', 'email', 'phone', 'status', 'assigned_to', 'notes']);
-        $this->resetValidation();
-        $this->dispatch('close-modal');
-        flash()->success('Lead created successfully!');
+        $this->resetForm();
+        $this->dispatch('close-modal', 'createLeadModal');
+        flash()->success('Lead created successfully!'); // Fixed message
     }
 
     public function deleteLead($leadId)
     {
-        $lead = Lead::findOrFail($leadId);
-        $lead->delete();
-
-        // $this->loadData();
+        Lead::findOrFail($leadId)->delete();
         flash()->success('Lead deleted successfully!');
     }
 
     public function render()
     {
-        $this->users = User::select('id', 'name')->get();
-
         return view('livewire.lead.lead-list', [
-            'leads' => Lead::with('user:id,name')->latest()->paginate(4)
+            'leads' => Lead::with('user:id,name')->latest()->paginate(8),
         ]);
     }
-
 }
