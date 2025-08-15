@@ -13,18 +13,11 @@ class LeadList extends Component
     protected $paginationTheme = 'bootstrap';
 
     public $users;
-
-
+    public $leadId;
 
     public function mount()
     {
-        $this->users = User::where('role', 'agent')->pluck('name', 'id');
-    }
-
-    public function deleteLead($leadId)
-    {
-        Lead::findOrFail($leadId)->delete();
-        flash()->success('Lead deleted successfully!');
+        $this->users = User::where('role', 'agent')->pluck('name', 'id')->toArray();
     }
 
     public function render()

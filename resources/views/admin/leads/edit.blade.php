@@ -1,11 +1,11 @@
 @extends('layouts.admin')
-@section('title', 'Leads Create')
+@section('title', 'Leads Edit')
 
 @section('content')
 
 <div class="row">
     <div class="col-12">
-        @livewire('lead.create')
+        @livewire('lead.edit', ['id' => $lead->id])
     </div>
 </div>
 @endsection

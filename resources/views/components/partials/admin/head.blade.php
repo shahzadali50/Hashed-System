@@ -62,7 +62,7 @@
     {{-- @vite(['resources/js/app.js','resources/js/echo.js']) --}}
     @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/echo.js'])
     @livewireStyles
-    <title>@yield('title')chat-system</title>
+    <title>@yield('title')</title>
     <style>
         .fl-wrapper{
             z-index: +99999 !important;

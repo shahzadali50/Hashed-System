@@ -56,7 +56,8 @@ Route::group(['as' => 'admin.', 'middleware' => ['auth','admin'], 'prefix' => 'a
     Route::get('chat/list', [ChatMessageController::class, 'chatList'])->name('chat.list');
     Route::get('leads/list', [LeadController::class, 'list'])->name('leads.list');
     Route::get('leads/create', [LeadController::class, 'create'])->name('leads.create');
-
+    Route::get('leads/edit/{id}', [LeadController::class, 'edit'])->name('leads.edit');
+    Route::delete('leads/delete/{id}', [LeadController::class, 'delete'])->name('leads.delete');
 });
 
 
