@@ -34,20 +34,18 @@
                         </select>
                         @error('status') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
-                    <div class="col-md-12">
-                        <label for="assigned_to" class="form-label">Assign To</label>
-                        <select wire:model="assigned_to" id="assigned_to" class="form-control">
-                            <option value="">Select User</option>
-                            @if($users && count($users) > 0)
+                    @if(count($users) > 0)
+                        <div class="col-md-12">
+                            <label for="assigned_to" class="form-label">Assign To</label>
+                            <select wire:model="assigned_to" id="assigned_to" class="form-control">
+                                <option value="">Select User</option>
                                 @foreach($users as $id => $name)
                                     <option value="{{ $id }}">{{ $name }}</option>
                                 @endforeach
-                            @else
-                                <option value="" disabled>No agent users available</option>
-                            @endif
-                        </select>
-                        @error('assigned_to') <span class="text-danger">{{ $message }}</span> @enderror
-                    </div>
+                            </select>
+                            @error('assigned_to') <span class="text-danger">{{ $message }}</span> @enderror
+                        </div>
+                    @endif
                     <div class="col-md-12">
                         <label for="notes" class="form-label">Notes <span class="text-danger">*</span></label>
                         <textarea wire:model="notes" id="notes" class="form-control" rows="4" placeholder="Enter notes"></textarea>

@@ -62,9 +62,6 @@ Route::group(['as' => 'admin.', 'middleware' => ['auth','admin'], 'prefix' => 'a
 
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    // Route::get('/dashboard', function () {
-    //     return view('dashboard');
-    // })->name('dashboard');
     Route::get('/dashboard', [MainController::class, 'checkRole'])->name('dashboard');
 });
 

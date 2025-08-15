@@ -6,6 +6,7 @@ use App\Models\Lead;
 use App\Models\User;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Illuminate\Support\Facades\Auth;
 
 class LeadList extends Component
 {
@@ -45,12 +46,21 @@ class LeadList extends Component
 
     public function render()
     {
-        $leads = Lead::with('user:id,name')
-            ->orderBy($this->sortField, $this->sortDirection)
-            ->paginate(10);
+        $user = Auth::user();
+        $query = Lead::with('user:id,name');
+
+        // Apply role-based filtering
+        if ($user->role === 'agent') {
+            // Agent can only see leads assigned to them
+            $query->where('assigned_to', $user->id);
+        }
+        // Admin can see all leads (no additional filter needed)
+
+        $leads = $query->orderBy($this->sortField, $this->sortDirection)->paginate(10);
 
         return view('livewire.lead.lead-list', [
             'leads' => $leads,
+            'userRole' => $user->role,
         ]);
     }
 }

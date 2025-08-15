@@ -53,7 +53,7 @@ public function store(StoreContactRequest $request)
 
     public function checkRole(){
         if (auth()->check()) {
-            if (auth()->user()->role == "admin") {
+            if (auth()->user()->role == "admin" || auth()->user()->role == "agent") {
 
                 return redirect()->route('admin.dashboard');
             } else {

@@ -5,6 +5,7 @@ namespace App\Livewire\Lead;
 use App\Models\Lead;
 use App\Models\User;
 use Livewire\Component;
+use Illuminate\Support\Facades\Auth;
 
 class Edit extends Component
 {
@@ -25,7 +26,14 @@ class Edit extends Component
     public function mount($id)
     {
         try {
+            $user = Auth::user();
             $lead = Lead::findOrFail($id);
+            
+            // Check access permissions
+            if ($user->role === 'agent' && $lead->assigned_to !== $user->id) {
+                flash()->error('Access denied. You can only edit leads assigned to you.');
+                return redirect()->route('admin.leads.list');
+            }
             
             $this->lead_id = $lead->id;
             $this->name = $lead->name;
@@ -35,7 +43,12 @@ class Edit extends Component
             $this->assigned_to = $lead->assigned_to;
             $this->notes = $lead->notes;
             
-            $this->users = User::where('role', 'agent')->pluck('name', 'id')->toArray();
+            // Only admin can see agent dropdown
+            if ($user->role === 'admin') {
+                $this->users = User::where('role', 'agent')->pluck('name', 'id')->toArray();
+            } else {
+                $this->users = [];
+            }
             
         } catch (\Exception $e) {
             flash()->error('Error loading lead: ' . $e->getMessage());
@@ -49,6 +62,14 @@ class Edit extends Component
             $this->validate();
 
             $lead = Lead::findOrFail($this->lead_id);
+            
+            // Check access permissions again
+            $user = Auth::user();
+            if ($user->role === 'agent' && $lead->assigned_to !== $user->id) {
+                flash()->error('Access denied. You can only edit leads assigned to you.');
+                return redirect()->route('admin.leads.list');
+            }
+            
             $lead->update([
                 'name' => $this->name,
                 'email' => $this->email,

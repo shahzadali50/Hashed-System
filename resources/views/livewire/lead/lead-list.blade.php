@@ -21,17 +21,28 @@
     <div class="card">
         <div class="card-header bg-dark d-flex justify-content-between align-items-center">
             <div>
-                <h3 class="m-0 text-white h3">Leads List</h3>
+                <h3 class="m-0 text-white h3">
+                    @if($userRole === 'admin')
+                        All Leads
+                    @else
+                        My Leads
+                    @endif
+                </h3>
                 @if($sortField && $sortDirection)
                     <small class="text-light">
                         Sorted by: <strong>{{ ucfirst(str_replace('_', ' ', $sortField)) }}</strong> 
                         ({{ $sortDirection === 'asc' ? 'A-Z' : 'Z-A' }})
                     </small>
                 @endif
+                @if($userRole === 'agent')
+                    <small class="text-light d-block">Showing only leads assigned to you</small>
+                @endif
             </div>
-            <a href="{{ route('admin.leads.create') }}" class="btn btn-primary">
-                Create Lead
-            </a>
+            @if($userRole === 'admin')
+                <a href="{{ route('admin.leads.create') }}" class="btn btn-primary">
+                    Create Lead
+                </a>
+            @endif
         </div>
         <div class="card-body table-responsive">
             <table class="table table-striped">
@@ -62,19 +73,23 @@
                                 <i class="sort-icon {{ $this->sortField === 'status' ? 'active' : '' }} {{ $this->getSortIcon('status') }} ms-1"></i>
                             </div>
                         </th>
-                        <th>
-                            <div class="d-flex align-items-center sortable-header" wire:click="sortBy('assigned_to')">
-                                Assigned To
-                                <i class="sort-icon {{ $this->sortField === 'assigned_to' ? 'active' : '' }} {{ $this->getSortIcon('assigned_to') }} ms-1"></i>
-                            </div>
-                        </th>
+                        @if($userRole === 'admin')
+                            <th>
+                                <div class="d-flex align-items-center sortable-header" wire:click="sortBy('assigned_to')">
+                                    Assigned To
+                                    <i class="sort-icon {{ $this->sortField === 'assigned_to' ? 'active' : '' }} {{ $this->getSortIcon('assigned_to') }} ms-1"></i>
+                                </div>
+                            </th>
+                        @endif
                         <th>
                             <div class="d-flex align-items-center sortable-header" wire:click="sortBy('created_at')">
                                 Created
                                 <i class="sort-icon {{ $this->sortField === 'created_at' ? 'active' : '' }} {{ $this->getSortIcon('created_at') }} ms-1"></i>
                             </div>
                         </th>
+                        @if($userRole === 'admin')
                         <th>Action</th>
+                        @endif
                     </tr>
                 </thead>
                 <tbody>
@@ -89,27 +104,39 @@
                                     {{ ucfirst($lead->status) }}
                                 </span>
                             </td>
-                            <td>{{ $lead->user?->name ?? 'Not Assigned' }}</td>
+                            @if($userRole === 'admin')
+                                <td>{{ $lead->user?->name ?? 'Not Assigned' }}</td>
+                            @endif
                             <td>{{ $lead->created_at->format('M d, Y') }}</td>
+                            @if($userRole === 'admin')
                             <td>
                                 <div class="d-flex gap-1">
                                     <a href="{{ route('admin.leads.edit', $lead->id) }}" class="btn btn-sm btn-primary">
                                         Edit
                                     </a>
-                                    <form action="{{ route('admin.leads.delete', $lead->id) }}" method="POST" style="display: inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-danger" 
-                                                onclick="return confirm('Are you sure you want to delete this lead?')">
-                                            Delete
-                                        </button>
-                                    </form>
+                              
+                                        <form action="{{ route('admin.leads.delete', $lead->id) }}" method="POST" style="display: inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-danger" 
+                                                    onclick="return confirm('Are you sure you want to delete this lead?')">
+                                                Delete
+                                            </button>
+                                        </form>
+                             
                                 </div>
                             </td>
+                            @endif
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="text-center">No leads found</td>
+                            <td colspan="{{ $userRole === 'admin' ? '8' : '7' }}" class="text-center">
+                                @if($userRole === 'agent')
+                                    No leads assigned to you yet
+                                @else
+                                    No leads found
+                                @endif
+                            </td>
                         </tr>
                     @endforelse
                 </tbody>
