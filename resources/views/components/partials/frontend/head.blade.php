@@ -2,17 +2,10 @@
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>{{ business_setting('website_name') ?? 'Video | Editor' }}</title>
+    <title>Home</title>
     <meta name="description" content="">
     <meta name="keywords" content="">
-    @php
-    $site_icon = business_setting('site_icon');
-@endphp
-    @if ($site_icon) <!-- Check if the logo path exists -->
-    <link rel="icon" type="image/x-icon" href="{{ asset('storage/' .$site_icon) }}" />
-@else
-<link rel="icon" type="image/x-icon" href="{{ url('assets/img/website_apperance/default-site-icon.svg') }}" />
-@endif
+    <link rel="icon" type="image/x-icon" href="{{ url('assets/img/website_apperance/default-site-icon.svg') }}" />
 
 <!-- Fonts -->
 <link href="https://fonts.googleapis.com" rel="preconnect">

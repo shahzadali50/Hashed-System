@@ -5,14 +5,7 @@
     <meta name="description" content="" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Favicon -->
-    @php
-    $site_icon = business_setting('site_icon');
-@endphp
-    @if ($site_icon) <!-- Check if the logo path exists -->
-    <link rel="icon" type="image/x-icon" href="{{ asset('storage/' . $site_icon) }}" />
-@else
-<link rel="icon" type="image/x-icon" href="{{ url('assets/img/website_apperance/default-site-icon.svg') }}" />
-@endif
+    <link rel="icon" type="image/x-icon" href="{{ url('assets/img/website_apperance/default-site-icon.svg') }}" />
     <link rel="icon" type="image/x-icon" href="{{ url('assets/images/header-newlogo.PNG') }}" />
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />

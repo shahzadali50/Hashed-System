@@ -7,14 +7,8 @@
 
                 </span>
             </span>
-            @php
-            $headerLogo = business_setting('header_logo');
-        @endphp
-            @if ($headerLogo) <!-- Check if the logo path exists -->
-            <img style="max-width: 150px;" class="img-thumbnail" src="{{ asset('storage/' . $headerLogo) }}" alt="Header Logo Preview"/>
-        @else
-        <span class="badge bg-label-secondary rounded-pill mb-1"> No logo uploaded yet</span>
-        @endif
+
+            <img style="max-width: 150px;" class="img-thumbnail" src="{{ url('assets/img/website_apperance/default-header_logo.jpg') }}" alt="Header Logo Preview" />
 
         </a>
 
@@ -35,94 +29,12 @@
         <li class="menu-header mt-2">
             <span class="menu-header-text" data-i18n="MANAGE">MANAGE</span>
         </li>
-
-        <li class="menu-item ">
-            <a href="{{ route('dashboard') }}" class="menu-link">
-                <i class="menu-icon tf-icons mdi mdi-home-outline"></i>
-                <div data-i18n="Dashboard">Dashboard</div>
-            </a>
-
-        </li>
         <li class="menu-item {{ in_array(Route::currentRouteName(), ['admin.leads.list','admin.leads.create','admin.leads.edit']) ? 'active' : '' }}  ">
             <a href="{{ route('admin.leads.list') }}" class="menu-link">
                 <i class="menu-icon tf-icons mdi mdi-home-outline"></i>
                 <div data-i18n="Leads">Leads</div>
             </a>
 
-        </li>
-        {{-- <li class="menu-item {{ Route::currentRouteName() == 'categories' ? 'active' : '' }}">
-            <a href="{{ route('categories') }}" class="menu-link">
-                <i class="menu-icon tf-icons mdi mdi-note-outline"></i>
-                <div>Categories</div>
-            </a>
-        </li> --}}
-        <li class="menu-item  {{ Route::currentRouteName()=='admin.contact.list' ? 'active':'' }} ">
-            <a href=" {{ route('admin.contact.list') }} " class="menu-link">
-                <i class="menu-icon tf-icons mdi mdi-receipt"></i>
-                <div data-i18n="Contacts">Contacts</div>
-            </a>
-        </li>
-        <li class="menu-item {{ in_array(Route::currentRouteName(), ['admin.portfolio.categories', 'admin.category.edit']) ? 'active' : '' }} ">
-            <a href="{{ route('admin.portfolio.categories') }}" class="menu-link">
-                <i class="menu-icon tf-icons mdi mdi-home-outline"></i>
-                <div data-i18n="Portfolio">Portfolio</div>
-            </a>
-
-        </li>
-        <li class="menu-item {{ in_array(Route::currentRouteName(), ['admin.blog.create','admin.blogs.categories','admin.blog.edit','admin.blog.list','admin.blog.view'.'admin.blog.edit']) ? 'active' : '' }} ">
-            <a href="{{ route('admin.blogs.categories') }}" class="menu-link">
-                <i class="menu-icon tf-icons mdi mdi-home-outline"></i>
-                <div data-i18n="Blogs">Blogs</div>
-            </a>
-
-        </li>
-        {{-- <li class="menu-item {{ in_array(Route::currentRouteName(), ['admin.blog.create', 'admin.blog.list','admin.blog.view']) ? 'active open' : '' }} ">
-
-            <a href="javascript:void(0);" class="menu-link menu-toggle waves-effect d-flex ">
-                <i class="menu-icon tf-icons mdi mdi-note-outline"></i>
-
-                <div data-i18n="Blogs">Blogs</div>
-            </a>
-            <ul class="menu-sub">
-                <li class="menu-item {{ Route::currentRouteName()=='admin.blog.create' ? 'active':'' }} ">
-                    <a href="{{ route('admin.blog.create',3) }}" class="menu-link">
-                        <div data-i18n="Add">Add</div>
-                    </a>
-                </li>
-                <li class="menu-item {{ Route::currentRouteName()=='admin.blog.list' ? 'active':'' }} ">
-                    <a href="{{ route('admin.blog.list',2) }}" class="menu-link">
-                        <div data-i18n="List">List</div>
-                    </a>
-                </li>
-
-            </ul>
-        </li> --}}
-        <li class="menu-item {{ in_array(Route::currentRouteName(), ['admin.website.appearance','admin.website.theme','admin.website.banner']) ? 'active open' : '' }}">
-
-            <a href="javascript:void(0);" class="menu-link menu-toggle waves-effect d-flex ">
-                <i class="menu-icon tf-icons mdi mdi-note-outline"></i>
-
-                <div data-i18n="Website Setup">Website Setup </div>
-            </a>
-            <ul class="menu-sub">
-                <li class="menu-item {{ Route::currentRouteName()=='admin.website.appearance' ? 'active':'' }} ">
-                    <a href="{{ route('admin.website.appearance') }}" class="menu-link">
-                        <div data-i18n="Apperance">Apperance</div>
-                    </a>
-                </li>
-                <li class="menu-item {{ Route::currentRouteName()=='admin.website.theme' ? 'active':'' }} ">
-                    <a href="{{ route('admin.website.theme') }}" class="menu-link">
-                        <div data-i18n="Theme">Theme</div>
-                    </a>
-                </li>
-                <li class="menu-item {{ Route::currentRouteName()=='admin.website.banner' ? 'active':'' }} ">
-                    <a href="{{ route('admin.website.banner') }}" class="menu-link">
-                        <div data-i18n="Banner">Banner</div>
-                    </a>
-                </li>
-
-
-            </ul>
         </li>
         <li class="menu-item {{ in_array(Route::currentRouteName(), ['admin.chat.list']) ? 'active' : '' }} ">
             <a href="{{ route('admin.chat.list') }}" class="menu-link">
