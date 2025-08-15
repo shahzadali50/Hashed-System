@@ -1,7 +1,34 @@
 <div>
+    <style>
+        .sortable-header {
+            cursor: pointer;
+            user-select: none;
+            transition: background-color 0.2s ease;
+        }
+        .sortable-header:hover {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+        }
+        .sort-icon {
+            font-size: 14px;
+            opacity: 0.7;
+        }
+        .sort-icon.active {
+            opacity: 1;
+            color: #fff;
+        }
+    </style>
+    
     <div class="card">
         <div class="card-header bg-dark d-flex justify-content-between align-items-center">
-            <h3 class="m-0 text-white">Leads List</h3>
+            <div>
+                <h3 class="m-0 text-white h3">Leads List</h3>
+                @if($sortField && $sortDirection)
+                    <small class="text-light">
+                        Sorted by: <strong>{{ ucfirst(str_replace('_', ' ', $sortField)) }}</strong> 
+                        ({{ $sortDirection === 'asc' ? 'A-Z' : 'Z-A' }})
+                    </small>
+                @endif
+            </div>
             <a href="{{ route('admin.leads.create') }}" class="btn btn-primary">
                 Create Lead
             </a>
@@ -11,12 +38,42 @@
                 <thead class="bg-primary text-white">
                     <tr>
                         <th>#</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                        <th>Status</th>
-                        <th>Assigned To</th>
-                        <th>Created</th>
+                        <th>
+                            <div class="d-flex align-items-center sortable-header" wire:click="sortBy('name')">
+                                Name
+                                <i class="sort-icon {{ $this->sortField === 'name' ? 'active' : '' }} {{ $this->getSortIcon('name') }} ms-1"></i>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="d-flex align-items-center sortable-header" wire:click="sortBy('email')">
+                                Email
+                                <i class="sort-icon {{ $this->sortField === 'email' ? 'active' : '' }} {{ $this->getSortIcon('email') }} ms-1"></i>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="d-flex align-items-center sortable-header" wire:click="sortBy('phone')">
+                                Phone
+                                <i class="sort-icon {{ $this->sortField === 'phone' ? 'active' : '' }} {{ $this->getSortIcon('phone') }} ms-1"></i>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="d-flex align-items-center sortable-header" wire:click="sortBy('status')">
+                                Status
+                                <i class="sort-icon {{ $this->sortField === 'status' ? 'active' : '' }} {{ $this->getSortIcon('status') }} ms-1"></i>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="d-flex align-items-center sortable-header" wire:click="sortBy('assigned_to')">
+                                Assigned To
+                                <i class="sort-icon {{ $this->sortField === 'assigned_to' ? 'active' : '' }} {{ $this->getSortIcon('assigned_to') }} ms-1"></i>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="d-flex align-items-center sortable-header" wire:click="sortBy('created_at')">
+                                Created
+                                <i class="sort-icon {{ $this->sortField === 'created_at' ? 'active' : '' }} {{ $this->getSortIcon('created_at') }} ms-1"></i>
+                            </div>
+                        </th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -62,5 +119,4 @@
             </div>
         </div>
     </div>
-
 </div>

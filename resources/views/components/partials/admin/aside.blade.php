@@ -43,7 +43,7 @@
             </a>
 
         </li>
-        <li class="menu-item {{ Route::currentRouteName()=='admin.leads.list' ? 'active':'' }}  ">
+        <li class="menu-item {{ in_array(Route::currentRouteName(), ['admin.leads.list','admin.leads.create','admin.leads.edit']) ? 'active' : '' }}  ">
             <a href="{{ route('admin.leads.list') }}" class="menu-link">
                 <i class="menu-icon tf-icons mdi mdi-home-outline"></i>
                 <div data-i18n="Leads">Leads</div>
