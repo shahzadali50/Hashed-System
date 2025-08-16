@@ -36,6 +36,20 @@
             </a>
 
         </li>
+        <li class="menu-item {{ in_array(Route::currentRouteName(), ['admin.roles.list','admin.roles.create','admin.roles.edit',]) ? 'active' : '' }}  ">
+            <a href="{{ route('admin.roles.list') }}" class="menu-link">
+                <i class="menu-icon tf-icons mdi mdi-shield-account-outline"></i>
+                <div data-i18n="Roles">Roles</div>
+            </a>
+
+        </li>
+        <li class="menu-item {{ in_array(Route::currentRouteName(), ['admin.permissions.list','admin.permissions.create','admin.permissions.edit',]) ? 'active' : '' }}  ">
+            <a href="{{ route('admin.permissions.list') }}" class="menu-link">
+                <i class="menu-icon tf-icons mdi mdi-shield-key-outline"></i>
+                <div data-i18n="Permissions">Permissions</div>
+            </a>
+
+        </li>
         <li class="menu-item {{ in_array(Route::currentRouteName(), ['admin.chat.list']) ? 'active' : '' }} ">
             <a href="{{ route('admin.chat.list') }}" class="menu-link">
                 <i class="menu-icon tf-icons mdi mdi-home-outline"></i>
