@@ -6,6 +6,7 @@ use App\Http\Controllers\LeadController;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\WebsiteController;
 use App\Http\Controllers\PortfolioController;
@@ -27,6 +28,7 @@ Route::group(['as' => 'admin.', 'middleware' => ['auth','admin'], 'prefix' => 'a
     Route::get('leads/create', [LeadController::class, 'create'])->name('leads.create');
     Route::get('leads/edit/{id}', [LeadController::class, 'edit'])->name('leads.edit');
     Route::delete('leads/delete/{id}', [LeadController::class, 'delete'])->name('leads.delete');
+     // Role routes
     Route::get('roles', [RoleController::class, 'list'])->name('roles.list');
     Route::get('roles/create', [RoleController::class, 'create'])->name('roles.create');
     Route::post('roles/store', [RoleController::class, 'store'])->name('roles.store');
@@ -44,6 +46,15 @@ Route::group(['as' => 'admin.', 'middleware' => ['auth','admin'], 'prefix' => 'a
     Route::put('permissions/update/{permission}', [PermissionController::class, 'update'])->name('permissions.update');
     Route::delete('permissions/{permission}', [PermissionController::class, 'destroy'])->name('permissions.destroy');
     Route::get('permissions/{permission}/show', [PermissionController::class, 'show'])->name('permissions.show');
+
+    // User routes
+    Route::get('users', [UserController::class, 'list'])->name('users.list');
+    Route::get('users/create', [UserController::class, 'create'])->name('users.create');
+    Route::post('users/store', [UserController::class, 'store'])->name('users.store');
+    Route::get('users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
+    Route::put('users/{user}/update', [UserController::class, 'update'])->name('users.update');
+    Route::delete('users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+    Route::get('users/{user}/show', [UserController::class, 'show'])->name('users.show');
 });
 
 
