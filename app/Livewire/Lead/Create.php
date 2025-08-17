@@ -5,7 +5,9 @@ namespace App\Livewire\Lead;
 use App\Models\Lead;
 use App\Models\User;
 use Livewire\Component;
-use Illuminate\Support\Facades\Auth;
+use App\Mail\LeadCreatedMail;
+use Illuminate\Support\Facades\Mail;
+use App\Jobs\SendLeadCreatedEmail;
 
 class Create extends Component
 {
@@ -37,7 +39,7 @@ class Create extends Component
     {
         try {
             $this->validate();
-            Lead::create([
+            $lead=Lead::create([
                 'name' => $this->name,
                 'email' => $this->email,
                 'phone' => $this->phone,
@@ -45,6 +47,10 @@ class Create extends Component
                 'assigned_to' => $this->assigned_to,
                 'notes' => $this->notes,
             ]);
+            if ($this->assigned_to) {
+                // Dispatch job to send email in background with 5 second delay
+                SendLeadCreatedEmail::dispatch($lead, $this->assigned_to)->delay(now()->addSeconds(5));
+            }
             $this->resetValidation();
             flash()->success('Lead created successfully!');
             return redirect()->route('admin.leads.list');

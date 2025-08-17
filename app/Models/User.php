@@ -48,4 +48,12 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Get the leads assigned to this user.
+     */
+    public function assignedLeads()
+    {
+        return $this->hasMany(Lead::class, 'assigned_to');
+    }
 }
