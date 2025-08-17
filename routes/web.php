@@ -1,18 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\BlogController;
 use App\Http\Controllers\LeadController;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\WebsiteController;
-use App\Http\Controllers\PortfolioController;
 use App\Http\Controllers\ChatMessageController;
-use App\Http\Controllers\BlogCategoryController;
-use App\Http\Controllers\PortfolioCategoryController;
+
 
 Route::get('/', function () {
     return view('index');

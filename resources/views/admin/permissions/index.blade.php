@@ -7,7 +7,9 @@
         <div class="card">
             <div class="card-header bg-dark d-flex justify-content-between align-items-center">
                 <h3 class="m-0 text-white h3">Permissions List</h3>
-                <a href="{{ route('admin.permissions.create') }}" class="btn btn-primary">Create Permission</a>
+                @can('create permissions')
+                    <a href="{{ route('admin.permissions.create') }}" class="btn btn-primary">Create Permission</a>
+                @endcan
             </div>
             <div class="card-body table-responsive">
                 @if(session('success'))
@@ -44,12 +46,18 @@
                             </td>
                             <td>{{ $permission->created_at->diffForHumans() }}</td>
                             <td>
-                                <a href="{{ route('admin.permissions.show',$permission->id) }}" class="btn btn-sm btn-info">View</a>
-                                <a href="{{ route('admin.permissions.edit',$permission->id) }}" class="btn btn-sm btn-warning">Edit</a>
-                                <form action="{{ route('admin.permissions.destroy',$permission->id) }}" method="POST" class="d-inline">
-                                    @csrf @method('DELETE')
-                                    <button class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
-                                </form>
+                                @can('view permissions')
+                                    <a href="{{ route('admin.permissions.show',$permission->id) }}" class="btn btn-sm btn-info">View</a>
+                                @endcan
+                                @can('edit permissions')
+                                    <a href="{{ route('admin.permissions.edit',$permission->id) }}" class="btn btn-sm btn-warning">Edit</a>
+                                @endcan
+                                @can('delete permissions')
+                                    <form action="{{ route('admin.permissions.destroy',$permission->id) }}" method="POST" class="d-inline">
+                                        @csrf @method('DELETE')
+                                        <button class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                                    </form>
+                                @endcan
                             </td>
                         </tr>
                         @empty

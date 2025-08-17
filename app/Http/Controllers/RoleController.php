@@ -9,6 +9,7 @@ use Spatie\Permission\Models\Permission;
 
 class RoleController extends Controller
 {
+
     public function list(){
         $roles = Role::latest()->paginate(10);
 

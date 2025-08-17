@@ -27,13 +27,6 @@ class Create extends Component
     {
         try {
             $user = Auth::user();
-            
-            // Only admin can create leads
-            if ($user->role !== 'admin') {
-                flash()->error('Access denied. Only administrators can create leads.');
-                return redirect()->route('admin.leads.list');
-            }
-            
             $this->users = User::where('role', 'agent')->pluck('name', 'id')->toArray();
         } catch (\Exception $e) {
             $this->users = [];
