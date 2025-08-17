@@ -7,7 +7,10 @@
         <div class="card">
             <div class="card-header bg-dark d-flex justify-content-between align-items-center">
                 <h3 class="m-0 text-white h3">Users List</h3>
+                @can('create users')
+
                 <a href="{{ route('admin.users.create') }}" class="btn btn-primary">Create User</a>
+                @endcan
             </div>
             <div class="card-body table-responsive">
                 @if(session('success'))
@@ -46,15 +49,24 @@
                             </td>
                             <td>{{ $user->created_at->diffForHumans() }}</td>
                             <td>
+                                @can('view users')
                                 <a href="{{ route('admin.users.show', $user->id) }}" class="btn btn-sm btn-info m-1">View</a>
+                                @endcan
+
+                                @can('edit users')
                                 <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-sm btn-warning m-1">Edit</a>
+                                @endcan
+
+
                                 @if(Auth::id() !== $user->id)
-                                    <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="d-inline">
-                                        @csrf @method('DELETE')
-                                        <button class="btn btn-sm btn-danger m-1" onclick="return confirm('Are you sure you want to delete this user?')">Delete</button>
-                                    </form>
+                                @can('delete users')
+                                <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="d-inline">
+                                    @csrf @method('DELETE')
+                                    <button class="btn btn-sm btn-danger m-1" onclick="return confirm('Are you sure you want to delete this user?')">Delete</button>
+                                </form>
+                                @endcan
                                 @else
-                                    <span class="text-muted">Current User</span>
+                                    <span class="text-danger">Current User</span>
                                 @endif
                             </td>
                         </tr>
