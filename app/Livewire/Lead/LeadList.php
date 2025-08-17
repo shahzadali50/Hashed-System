@@ -20,7 +20,8 @@ class LeadList extends Component
 
     public function mount()
     {
-        $this->users = User::where('role', 'agent')->pluck('name', 'id')->toArray();
+        // Sirf agents ka list assign karne ke liye
+        $this->users = User::role('agent')->pluck('name', 'id')->toArray();
     }
 
     public function sortBy($field)
@@ -31,7 +32,7 @@ class LeadList extends Component
             $this->sortField = $field;
             $this->sortDirection = 'asc';
         }
-        
+
         $this->resetPage();
     }
 
@@ -40,8 +41,10 @@ class LeadList extends Component
         if ($this->sortField !== $field) {
             return 'mdi mdi-sort';
         }
-        
-        return $this->sortDirection === 'asc' ? 'mdi mdi-sort-ascending' : 'mdi mdi-sort-descending';
+
+        return $this->sortDirection === 'asc'
+            ? 'mdi mdi-sort-ascending'
+            : 'mdi mdi-sort-descending';
     }
 
     public function render()
@@ -49,18 +52,20 @@ class LeadList extends Component
         $user = Auth::user();
         $query = Lead::with('user:id,name');
 
-        // Apply role-based filtering
-        if ($user->role === 'agent') {
-            // Agent can only see leads assigned to them
+        // 🚀 Role based filter
+        if ($user->hasRole('agent')) {
+            // Agent ko sirf apni leads dikhen
             $query->where('assigned_to', $user->id);
+        } elseif ($user->hasRole('admin') || $user->hasRole('super_admin')) {
+            // Admin aur Super Admin ko sb dikhen
+            // ❌ no filter required
         }
-        // Admin can see all leads (no additional filter needed)
 
         $leads = $query->orderBy($this->sortField, $this->sortDirection)->paginate(10);
 
         return view('livewire.lead.lead-list', [
             'leads' => $leads,
-            'userRole' => $user->role,
+            'userRole' => $user->getRoleNames()->first(), // show current role
         ]);
     }
 }

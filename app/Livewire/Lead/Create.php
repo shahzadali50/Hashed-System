@@ -26,8 +26,7 @@ class Create extends Component
     public function mount()
     {
         try {
-            $user = Auth::user();
-            $this->users = User::where('role', 'agent')->pluck('name', 'id')->toArray();
+            $this->users = User::role('agent')->pluck('name', 'id')->toArray();
         } catch (\Exception $e) {
             $this->users = [];
             flash()->error('Error loading users: ' . $e->getMessage());

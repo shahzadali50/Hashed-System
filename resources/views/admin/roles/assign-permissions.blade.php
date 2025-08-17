@@ -58,7 +58,6 @@
                                 </div>
                                 <div class="card-body">
                                     <p><strong>Role Name:</strong> {{ $role->name }}</p>
-                                    <p><strong>Role ID:</strong> {{ $role->id }}</p>
                                     <p><strong>Created:</strong> {{ $role->created_at->format('M d, Y') }}</p>
                                     <p><strong>Current Permissions:</strong> {{ count($rolePermissions) }}</p>
                                 </div>

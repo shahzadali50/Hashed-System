@@ -28,13 +28,6 @@ class Edit extends Component
         try {
             $user = Auth::user();
             $lead = Lead::findOrFail($id);
-            
-            // Check access permissions
-            if ($user->role === 'agent' && $lead->assigned_to !== $user->id) {
-                flash()->error('Access denied. You can only edit leads assigned to you.');
-                return redirect()->route('admin.leads.list');
-            }
-            
             $this->lead_id = $lead->id;
             $this->name = $lead->name;
             $this->email = $lead->email;
@@ -42,19 +35,20 @@ class Edit extends Component
             $this->status = $lead->status;
             $this->assigned_to = $lead->assigned_to;
             $this->notes = $lead->notes;
-            
-            // Only admin can see agent dropdown
-            if ($user->role === 'admin') {
-                $this->users = User::where('role', 'agent')->pluck('name', 'id')->toArray();
+
+            // ✅ Only admin or super_admin can see agents dropdown
+            if ($user->hasAnyRole(['admin', 'super_admin'])) {
+                $this->users = User::role('agent')->pluck('name', 'id')->toArray();
             } else {
                 $this->users = [];
             }
-            
+
         } catch (\Exception $e) {
             flash()->error('Error loading lead: ' . $e->getMessage());
             return redirect()->route('admin.leads.list');
         }
     }
+
 
     public function updateLead()
     {
@@ -62,14 +56,14 @@ class Edit extends Component
             $this->validate();
 
             $lead = Lead::findOrFail($this->lead_id);
-            
+
             // Check access permissions again
             $user = Auth::user();
             if ($user->role === 'agent' && $lead->assigned_to !== $user->id) {
                 flash()->error('Access denied. You can only edit leads assigned to you.');
                 return redirect()->route('admin.leads.list');
             }
-            
+
             $lead->update([
                 'name' => $this->name,
                 'email' => $this->email,
@@ -81,7 +75,7 @@ class Edit extends Component
 
             flash()->success('Lead updated successfully!');
             return redirect()->route('admin.leads.list');
-            
+
         } catch (\Illuminate\Validation\ValidationException $e) {
             // Validation errors are already handled by Livewire
             throw $e;

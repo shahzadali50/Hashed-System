@@ -29,6 +29,7 @@
         <li class="menu-header mt-2">
             <span class="menu-header-text" data-i18n="MANAGE">MANAGE</span>
         </li>
+        @hasanyrole('admin|super_admin')
         <li class="menu-item {{ in_array(Route::currentRouteName(), ['admin.users.list','admin.users.create','admin.users.edit','admin.users.show']) ? 'active' : '' }}  ">
             <a href="{{ route('admin.users.list') }}" class="menu-link">
                 <i class="menu-icon tf-icons mdi mdi-account-group-outline"></i>
@@ -36,34 +37,30 @@
             </a>
 
         </li>
+        @endhasanyrole
+        @hasanyrole('admin|super_admin|agent')
         <li class="menu-item {{ in_array(Route::currentRouteName(), ['admin.leads.list','admin.leads.create','admin.leads.edit']) ? 'active' : '' }}  ">
             <a href="{{ route('admin.leads.list') }}" class="menu-link">
                 <i class="menu-icon tf-icons mdi mdi-home-outline"></i>
                 <div data-i18n="Leads">Leads</div>
             </a>
-
         </li>
-        <li class="menu-item {{ in_array(Route::currentRouteName(), ['admin.roles.list','admin.roles.create','admin.roles.edit',]) ? 'active' : '' }}  ">
-            <a href="{{ route('admin.roles.list') }}" class="menu-link">
-                <i class="menu-icon tf-icons mdi mdi-shield-account-outline"></i>
-                <div data-i18n="Roles">Roles</div>
-            </a>
+      @endhasanyrole
+        @role('super_admin')
+            <li class="menu-item {{ in_array(Route::currentRouteName(), ['admin.roles.list','admin.roles.create','admin.roles.edit']) ? 'active' : '' }}">
+                <a href="{{ route('admin.roles.list') }}" class="menu-link">
+                    <i class="menu-icon tf-icons mdi mdi-shield-account-outline"></i>
+                    <div data-i18n="Roles">Roles</div>
+                </a>
+            </li>
 
-        </li>
-        <li class="menu-item {{ in_array(Route::currentRouteName(), ['admin.permissions.list','admin.permissions.create','admin.permissions.edit','admin.permissions.show']) ? 'active' : '' }}  ">
-            <a href="{{ route('admin.permissions.list') }}" class="menu-link">
-                <i class="menu-icon tf-icons mdi mdi-shield-key-outline"></i>
-                <div data-i18n="Permissions">Permissions</div>
-            </a>
-
-        </li>
-        <li class="menu-item {{ in_array(Route::currentRouteName(), ['admin.chat.list']) ? 'active' : '' }} ">
-            <a href="{{ route('admin.chat.list') }}" class="menu-link">
-                <i class="menu-icon tf-icons mdi mdi-home-outline"></i>
-                <div data-i18n="Chat">Chat</div>
-            </a>
-
-        </li>
+            <li class="menu-item {{ in_array(Route::currentRouteName(), ['admin.permissions.list','admin.permissions.create','admin.permissions.edit','admin.permissions.show']) ? 'active' : '' }}">
+                <a href="{{ route('admin.permissions.list') }}" class="menu-link">
+                    <i class="menu-icon tf-icons mdi mdi-shield-key-outline"></i>
+                    <div data-i18n="Permissions">Permissions</div>
+                </a>
+            </li>
+        @endrole
 
 
     </ul>

@@ -10,26 +10,13 @@ class PermissionSeeder extends Seeder
 {
     public function run()
     {
-        // Create permissions
+        // ✅ Define all permissions
         $permissions = [
             // User permissions
             'view users',
             'create users',
             'edit users',
             'delete users',
-
-            // Role permissions
-            'view roles',
-            'create roles',
-            'edit roles',
-            'delete roles',
-            'assign permissions',
-
-            // Permission permissions
-            'view permissions',
-            'create permissions',
-            'edit permissions',
-            'delete permissions',
 
             // Lead permissions
             'view leads',
@@ -38,30 +25,29 @@ class PermissionSeeder extends Seeder
             'delete leads',
         ];
 
+        // ✅ Create permissions (if not exists)
         foreach ($permissions as $permission) {
             Permission::firstOrCreate(['name' => $permission]);
         }
 
-        // Create roles and assign permissions
-        $adminRole = Role::firstOrCreate(['name' => 'admin']);
-        $adminRole->givePermissionTo(Permission::all());
+        // ✅ Create roles
+        $superAdminRole = Role::firstOrCreate(['name' => 'super_admin']);
+        $adminRole      = Role::firstOrCreate(['name' => 'admin']);
+        $agentRole      = Role::firstOrCreate(['name' => 'agent']);
 
-        $managerRole = Role::firstOrCreate(['name' => 'manager']);
-        $managerRole->givePermissionTo([
-            'view users', 'view roles', 'view permissions',
-            'view leads', 'create leads', 'edit leads',
-            'assign permissions'
+        // ✅ Assign permissions
+        $superAdminRole->givePermissionTo(Permission::all()); // 🚀 ALL permissions
+        $adminRole->givePermissionTo(Permission::all());      // All permissions (like before)
+
+        // 🚀 Agent can ONLY view leads
+        $agentRole->syncPermissions([
+            'view leads',
         ]);
 
-        $userRole = Role::firstOrCreate(['name' => 'user']);
-        $userRole->givePermissionTo([
-            'view leads', 'create leads'
-        ]);
-
-        // Assign admin role to the first user (you)
+        // ✅ Assign super_admin role to the very first user
         $firstUser = \App\Models\User::first();
-        if ($firstUser) {
-            $firstUser->assignRole('admin');
+        if ($firstUser && !$firstUser->hasRole('super_admin')) {
+            $firstUser->assignRole('super_admin');
         }
     }
 }

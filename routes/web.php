@@ -16,7 +16,7 @@ Route::get('/', function () {
 
 
 // admin routes👇
-Route::group(['as' => 'admin.', 'middleware' => ['auth','admin'], 'prefix' => 'admin'], function () {
+Route::group(['as' => 'admin.', 'middleware' => ['auth',], 'prefix' => 'admin'], function () {
 
     Route::get('dashboard', [MainController::class, 'dashboard'])->name('dashboard');
     Route::get('chat/list', [ChatMessageController::class, 'chatList'])->name('chat.list');

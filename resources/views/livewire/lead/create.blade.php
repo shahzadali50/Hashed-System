@@ -37,7 +37,7 @@
                 <div class="col-md-12">
                     <label for="assigned_to" class="form-label">Assign To</label>
                     <select wire:model="assigned_to" id="assigned_to" class="form-control">
-                        <option value="">Select User</option>
+                        <option disabled selected >Select User</option>
                         @foreach($users as $id => $name)
                             <option value="{{ $id }}">{{ $name }}</option>
                         @endforeach
