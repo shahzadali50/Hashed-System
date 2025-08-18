@@ -41,7 +41,7 @@
                                 <td><strong>Created:</strong></td>
                                 <td>{{ $user->created_at->format('M d, Y H:i:s') }}</td>
                             </tr>
-                          
+
                         </table>
                     </div>
 
@@ -71,10 +71,14 @@
                 </div>
 
                 <div class="mt-4">
+                    @can('edit users')
                     <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-warning">
                         <i class="mdi mdi-pencil me-1"></i>
                         Edit User
                     </a>
+                    @endcan
+                    @can('delete users')
+
                     @if(Auth::id() !== $user->id)
                         <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="d-inline">
                             @csrf @method('DELETE')
@@ -86,6 +90,7 @@
                     @else
                         <span class="text-muted ms-2">(Cannot delete your own account)</span>
                     @endif
+                    @endcan
                     <a href="{{ route('admin.users.list') }}" class="btn btn-secondary ms-2">Back to List</a>
                 </div>
             </div>

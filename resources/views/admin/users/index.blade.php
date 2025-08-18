@@ -57,16 +57,17 @@
                                 <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-sm btn-warning m-1">Edit</a>
                                 @endcan
 
-
-                                @if(Auth::id() !== $user->id)
+                                @if(Auth::id() !== $user->id && !$user->hasRole('super_admin'))
                                 @can('delete users')
                                 <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="d-inline">
                                     @csrf @method('DELETE')
                                     <button class="btn btn-sm btn-danger m-1" onclick="return confirm('Are you sure you want to delete this user?')">Delete</button>
                                 </form>
                                 @endcan
-                                @else
+                                @elseif(Auth::id() === $user->id)
                                     <span class="text-danger">Current User</span>
+                                @elseif($user->hasRole('super_admin'))
+                                    <span class="text-warning">Super Admin (Protected)</span>
                                 @endif
                             </td>
                         </tr>

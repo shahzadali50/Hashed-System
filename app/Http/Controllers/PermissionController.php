@@ -7,6 +7,14 @@ use Spatie\Permission\Models\Permission;
 
 class PermissionController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:view users')->only(['list', 'show']);
+        $this->middleware('permission:create users')->only(['create', 'store']);
+        $this->middleware('permission:edit users')->only(['edit', 'update']);
+        $this->middleware('permission:delete users')->only(['destroy']);
+    }
+
     public function list(){
         $permissions = Permission::latest()->paginate(10);
 

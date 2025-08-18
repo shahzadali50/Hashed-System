@@ -75,7 +75,8 @@ class LeadApiController extends Controller
 
             return $this->success(new LeadResource($lead), 'Lead retrieved successfully');
 
-        } catch (\Exception $e) {
+        }
+        catch (\Exception $e) {
             return $this->error('Failed to retrieve lead: ' . $e->getMessage(), 500);
         }
     }

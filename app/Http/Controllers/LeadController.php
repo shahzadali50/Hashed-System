@@ -9,10 +9,10 @@ class LeadController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('permission:lead-list')->only(['leads view']);
-        $this->middleware('permission:lead-create')->only(['leads create','leads store']);
-        $this->middleware('permission:lead-edit')->only(['leads edit','leads update']);
-        $this->middleware('permission:lead-delete')->only(['leads delete']);
+        $this->middleware('permission:view leads')->only(['list']);
+        $this->middleware('permission:create leads')->only(['create']);
+        $this->middleware('permission:edit leads')->only(['edit']);
+        $this->middleware('permission:delete leads')->only(['delete']);
     }
 
     public function list()

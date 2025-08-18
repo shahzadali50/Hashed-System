@@ -39,6 +39,10 @@ class PermissionSeeder extends Seeder
         $superAdminRole->givePermissionTo(Permission::all()); // 🚀 ALL permissions
         $adminRole->syncPermissions([
             'view users',
+            'create users',
+            'edit users',
+            'delete users',
+            'view leads',
             'create leads',
             'edit leads',
             'delete leads',

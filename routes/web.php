@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\LeadController;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\RoleController;
@@ -14,17 +15,48 @@ Route::get('/', function () {
     return view('index');
 });
 
+// Test route to check permissions (remove this in production)
+Route::get('/test-permissions', function () {
+    $user = Auth::user();
+    if (!$user) {
+        return 'Not logged in';
+    }
+
+    $permissions = [
+        'view leads' => $user->can('view leads'),
+        'create leads' => $user->can('create leads'),
+        'edit leads' => $user->can('edit leads'),
+        'delete leads' => $user->can('delete leads'),
+        'view users' => $user->can('view users'),
+        'create users' => $user->can('create users'),
+        'edit users' => $user->can('edit users'),
+        'delete users' => $user->can('delete users'),
+    ];
+
+    $roles = $user->getRoleNames();
+
+    return response()->json([
+        'user' => $user->name,
+        'email' => $user->email,
+        'role' => $user->role,
+        'roles' => $roles,
+        'permissions' => $permissions
+    ]);
+})->middleware('auth');
 
 // admin routes👇
-Route::group(['as' => 'admin.', 'middleware' => ['auth',], 'prefix' => 'admin'], function () {
+Route::group(['as' => 'admin.', 'middleware' => ['auth',]], function () {
 
     Route::get('dashboard', [MainController::class, 'dashboard'])->name('dashboard');
     Route::get('chat/list', [ChatMessageController::class, 'chatList'])->name('chat.list');
+
+    // Lead routes
     Route::get('leads/list', [LeadController::class, 'list'])->name('leads.list');
     Route::get('leads/create', [LeadController::class, 'create'])->name('leads.create');
     Route::get('leads/edit/{id}', [LeadController::class, 'edit'])->name('leads.edit');
     Route::delete('leads/delete/{id}', [LeadController::class, 'delete'])->name('leads.delete');
-     // Role routes
+
+    // Role routes
     Route::get('roles', [RoleController::class, 'list'])->name('roles.list');
     Route::get('roles/create', [RoleController::class, 'create'])->name('roles.create');
     Route::post('roles/store', [RoleController::class, 'store'])->name('roles.store');

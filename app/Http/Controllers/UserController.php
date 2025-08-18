@@ -12,10 +12,10 @@ class UserController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('permission:user-list')->only(['view users', ]);
-        $this->middleware('permission:user-create')->only(['create users', 'store users']);
-        $this->middleware('permission:user-edit')->only(['edit users', 'update users']);
-        $this->middleware('permission:user-delete')->only(['delete users']);
+        $this->middleware('permission:view users')->only(['list', 'show']);
+        $this->middleware('permission:create users')->only(['create', 'store']);
+        $this->middleware('permission:edit users')->only(['edit', 'update']);
+        $this->middleware('permission:delete users')->only(['destroy']);
     }
     public function list()
     {
@@ -25,18 +25,34 @@ class UserController extends Controller
 
     public function create()
     {
-        $roles = Role::all();
+        $user = Auth::user();
+
+        // If user is super_admin, show all roles including super_admin
+        if ($user->hasRole('super_admin')) {
+            $roles = Role::all();
+        } else {
+            // For non-super-admin users, exclude super_admin role
+            $roles = Role::where('name', '!=', 'super_admin')->get();
+        }
+
         return view('admin.users.create', compact('roles'));
     }
 
     public function store(Request $request)
     {
+        $user = Auth::user();
+
+        // Validate roles based on user permissions
+        $allowedRoles = $user->hasRole('super_admin')
+            ? Role::pluck('id')->toArray()
+            : Role::where('name', '!=', 'super_admin')->pluck('id')->toArray();
+
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
             'roles' => 'array',
-            'roles.*' => 'exists:roles,id'
+            'roles.*' => 'exists:roles,id|in:' . implode(',', $allowedRoles)
         ]);
 
         try {
@@ -60,19 +76,35 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
-        $roles = Role::all();
+        $currentUser = Auth::user();
+
+        // If current user is super_admin, show all roles including super_admin
+        if ($currentUser->hasRole('super_admin')) {
+            $roles = Role::all();
+        } else {
+            // For non-super-admin users, exclude super_admin role
+            $roles = Role::where('name', '!=', 'super_admin')->get();
+        }
+
         $userRoles = $user->roles->pluck('id')->toArray();
         return view('admin.users.edit', compact('user', 'roles', 'userRoles'));
     }
 
     public function update(Request $request, User $user)
     {
+        $currentUser = Auth::user();
+
+        // Validate roles based on user permissions
+        $allowedRoles = $currentUser->hasRole('super_admin')
+            ? Role::pluck('id')->toArray()
+            : Role::where('name', '!=', 'super_admin')->pluck('id')->toArray();
+
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
             'password' => 'nullable|string|min:8|confirmed',
             'roles' => 'array',
-            'roles.*' => 'exists:roles,id'
+            'roles.*' => 'exists:roles,id|in:' . implode(',', $allowedRoles)
         ]);
 
         try {

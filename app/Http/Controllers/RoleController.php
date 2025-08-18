@@ -6,17 +6,37 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Illuminate\Support\Facades\Auth;
 
 class RoleController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:view users')->only(['list', 'assignPermissions']);
+        $this->middleware('permission:create users')->only(['create', 'store']);
+        $this->middleware('permission:edit users')->only(['edit', 'update', 'updatePermissions']);
+        $this->middleware('permission:delete users')->only(['destroy']);
+    }
 
     public function list(){
-        $roles = Role::latest()->paginate(10);
+        $user = Auth::user();
+
+        // If user is super_admin, show all roles including super_admin
+        if ($user->hasRole('super_admin')) {
+            $roles = Role::latest()->paginate(10);
+        } else {
+            // For non-super-admin users, exclude super_admin role
+            $roles = Role::where('name', '!=', 'super_admin')->latest()->paginate(10);
+        }
 
         // If no roles exist, create some basic ones for testing
         if ($roles->count() === 0) {
             $this->createBasicRoles();
-            $roles = Role::latest()->paginate(10);
+            if ($user->hasRole('super_admin')) {
+                $roles = Role::latest()->paginate(10);
+            } else {
+                $roles = Role::where('name', '!=', 'super_admin')->latest()->paginate(10);
+            }
         }
 
         return view('admin.roles.index', compact('roles'));
